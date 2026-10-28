@@ -1,7 +1,7 @@
 // Guarda la app en el celular para que abra sin internet.
 // Al publicar una versión nueva, cambie el número de VERSION.
-const VERSION = 'bhpro-v8-3';
-const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './escudo.png'];
+const VERSION = 'bhpro-v8-4';
+const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192-v3.png', './icon-512-v3.png', './apple-touch-icon-v3.png', './escudo.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
