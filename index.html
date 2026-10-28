@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BH Pro</title>
+<meta name="theme-color" content="#0f6b5c">
+<meta name="description" content="Hábitos saludables para estudiantes de la I.E. Benjamín Herrera, Arjona.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BH Pro">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: app de una columna (máx. 480px) con barra de pestañas fija abajo, como una app real en el celular */
+:root{
+  --bg:#eef4f2; --surface:#ffffff; --ink:#12302b; --muted:#5b726d; --line:#d3e1dd;
+  --sea:#0f6b5c; --sea-soft:#dcefe9; --mango:#f2a516; --mango-soft:#fdf0d4;
+  --ok:#1f8a4c; --warn:#c97a07; --no:#c0392b;
+  --f-display:"Bricolage Grotesque", "Trebuchet MS", sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1715; --surface:#14231f; --ink:#e4efec; --muted:#93aaa4; --line:#24392f;
+  --sea:#4cc3aa; --sea-soft:#183a33; --mango:#f5b83d; --mango-soft:#3a2d12;
+  --ok:#4fc27f; --warn:#e9a53a; --no:#ef6b5c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1715; --surface:#14231f; --ink:#e4efec; --muted:#93aaa4; --line:#24392f;
+  --sea:#4cc3aa; --sea-soft:#183a33; --mango:#f5b83d; --mango-soft:#3a2d12;
+  --ok:#4fc27f; --warn:#e9a53a; --no:#ef6b5c; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+.wrap{max-width:480px;margin:0 auto;padding-inline:16px;padding-block:12px 96px}
+.proto{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:center;padding-block:4px 10px}
+.proto b{color:var(--mango)}
+header.app{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:28px;color:var(--sea);line-height:1}
+.brand small{display:block;font-family:var(--f-body);font-weight:400;font-size:12px;color:var(--muted);margin-top:4px}
+.who{font-size:13px;text-align:right;color:var(--muted)}
+.who b{display:block;color:var(--ink);font-size:14px}
+h2{font-family:var(--f-display);font-weight:800;font-size:21px;margin:18px 0 8px;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px;margin:0 0 12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.hero{background:var(--sea);color:#fff;border:none;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.hero .big{font-family:var(--f-display);font-weight:800;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.hero .lbl{font-size:13px;opacity:.85}
+.streak{background:var(--mango);color:#2a1d00;border-radius:12px;padding:8px 12px;text-align:center;font-weight:700}
+.streak span{display:block;font-family:var(--f-display);font-size:26px;line-height:1}
+.week{display:flex;gap:6px;margin-top:10px;grid-column:1/-1}
+.week i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.25)}
+.week i.on{background:var(--mango)}
+/* Selector Hoy / Ayer */
+.day{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px;margin-top:12px}
+.day button{flex:1;border:none;background:none;color:var(--muted);padding:8px;border-radius:9px;font-weight:700;font-size:14px}
+.day button[aria-pressed="true"]{background:var(--sea);color:#fff}
+.habits{display:grid;gap:10px;margin-top:12px}
+.habit{display:grid;grid-template-columns:44px 1fr auto;gap:10px 12px;align-items:center}
+.ico{width:44px;height:44px;border-radius:12px;background:var(--sea-soft);display:grid;place-items:center;color:var(--sea);position:relative}
+.ico svg{width:24px;height:24px}
+.habit .name{font-weight:700}
+.habit .goal{font-size:12px;color:var(--muted)}
+.habit.done .ico{background:var(--sea);color:#fff}
+.habit.half .ico{background:var(--mango-soft);color:var(--warn)}
+.score{font-size:11px;font-weight:700;color:var(--muted)}
+.habit.done .score{color:var(--ok)}
+.habit.half .score{color:var(--warn)}
+.ctrl{display:flex;align-items:center;gap:6px}
+.chips{grid-column:1/-1;display:flex;gap:6px}
+.chip{flex:1;min-width:0;padding:8px 2px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--sea);border-color:var(--sea);color:#fff}
+button{font:inherit;cursor:pointer}
+.round{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:18px;font-weight:700}
+.val{min-width:30px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.check{width:40px;height:40px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:transparent;font-size:20px;font-weight:700}
+.habit.done .check,.reto .check[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.whyb{background:none;border:none;padding:0;color:var(--sea);font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.why{grid-column:1/-1;margin:0;font-size:13px;background:var(--sea-soft);border-radius:10px;padding:10px;color:var(--ink)}
+.why cite{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:4px}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--mango);outline-offset:2px}
+.reto{border:2px dashed var(--mango);margin-top:12px}
+.reto .tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--warn)}
+.dots{display:flex;gap:4px;margin-top:4px}
+.dots i{width:22px;height:6px;border-radius:3px;background:var(--line)}
+.dots i.on{background:var(--mango)}
+.tip{background:var(--mango-soft);border-radius:12px;padding:12px;font-size:14px;margin-top:12px}
+.tip b{color:var(--warn)}
+.save{width:100%;margin-top:14px;padding:13px;border:none;border-radius:12px;background:var(--mango);color:#2a1d00;font-weight:700;font-size:15px}
+.save[disabled]{background:var(--sea-soft);color:var(--sea);cursor:default}
+.msg{text-align:center;font-size:13px;color:var(--ok);min-height:20px;margin-top:6px}
+.revlink{border:none;background:none;padding:0;color:var(--sea);font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase;text-decoration:underline;text-underline-offset:2px}
+/* Encuesta PAQ-A */
+.survey{border:2px solid var(--mango);display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:12px}
+.survey .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--warn)}
+.prog{height:8px;border-radius:4px;background:var(--sea-soft);overflow:hidden;margin:4px 0 14px}
+.prog i{display:block;height:100%;background:var(--mango)}
+.qn{font-size:12px;font-weight:700;color:var(--muted)}
+.qt{font-family:var(--f-display);font-size:19px;font-weight:800;line-height:1.25;margin:4px 0 12px;text-wrap:balance}
+.ans{display:grid;gap:8px}
+.ans button{text-align:left;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:14px}
+.ans button[aria-pressed="true"]{border:2px solid var(--sea);background:var(--sea-soft);font-weight:700}
+.grid5{display:grid;gap:10px}
+.grid5 .lbl{font-size:14px;font-weight:700;margin-bottom:4px}
+.grid5 .chips button{font-size:12px}
+.nav2{display:flex;gap:8px;margin-top:16px}
+.nav2 button{flex:1;padding:12px;border-radius:12px;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.nav2 button.fw{background:var(--sea);border-color:var(--sea);color:#fff}
+.nav2 button[disabled]{opacity:.45;cursor:default}
+.note{font-size:12px;color:var(--muted);margin-top:12px}
+/* Bienestar */
+.moods{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.mood{padding:8px 2px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:12px;font-weight:700;display:grid;justify-items:center;gap:4px}
+.mood span{font-size:26px;line-height:1}
+.mood[aria-pressed="true"]{border:2px solid var(--sea);background:var(--sea-soft)}
+.priv{display:flex;gap:6px;align-items:flex-start;font-size:12px;color:var(--muted);margin-top:10px}
+.moodmsg{margin:12px 0 0;font-size:14px;background:var(--sea-soft);border-radius:10px;padding:10px}
+.tools{display:grid;gap:10px}
+.tool{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center}
+.tool .name{font-weight:700}
+.tool .goal{font-size:12px;color:var(--muted)}
+.go{border:none;background:var(--sea);color:#fff;border-radius:10px;padding:8px 12px;font-weight:700;font-size:13px}
+.breath{display:grid;justify-items:center;gap:12px;padding-block:8px;grid-column:1/-1}
+.circle{width:120px;height:120px;border-radius:50%;background:var(--sea-soft);border:3px solid var(--sea);display:grid;place-items:center;font-weight:700;color:var(--sea);transform:scale(.7)}
+@media (prefers-reduced-motion:no-preference){.circle{transition:transform 4s ease-in-out}}
+.circle.in{transform:scale(1)}
+.help{border:2px solid var(--sea)}
+.help h3{margin:0 0 6px;font-size:16px}
+.help ul{margin:0;padding-left:18px;font-size:14px}
+.help li+li{margin-top:6px}
+.help a{color:var(--sea);font-weight:700}
+/* Aprende */
+.tipday{background:var(--mango);color:#2a1d00;border:none}
+.tipday .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.tipday p{margin:6px 0 10px;font-size:16px;font-weight:700;line-height:1.35}
+.tipday button{border:none;background:rgba(255,255,255,.55);color:#2a1d00;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px}
+.caps .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--sea)}
+.caps h3{font-family:var(--f-display);font-size:19px;margin:4px 0 8px;line-height:1.2}
+.caps p{margin:0 0 8px;font-size:14px}
+.caps ol{margin:0 0 8px;padding-left:20px;font-size:14px}
+.caps ol li+li{margin-top:4px}
+.caps cite{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:4px}
+.readb{width:100%;margin-top:8px;padding:11px;border-radius:12px;border:2px solid var(--sea);background:var(--surface);color:var(--sea);font-weight:700}
+.readb[aria-pressed="true"]{background:var(--sea);color:#fff}
+.quiz .q{font-weight:700;margin-bottom:10px}
+.quiz .opts{display:flex;gap:8px}
+.quiz .opts button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700}
+.quiz .opts button.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.quiz .opts button.wrong{background:var(--no);border-color:var(--no);color:#fff}
+.quiz .ans{margin:10px 0 0;font-size:14px}
+.lib{display:grid;gap:0}
+.lib div{display:flex;justify-content:space-between;gap:8px;align-items:center;padding-block:9px;border-top:1px solid var(--line);font-size:14px}
+.lib div:first-child{border-top:none}
+.lib small{display:block;color:var(--muted);font-size:12px}
+.st{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap;background:var(--sea-soft);color:var(--sea)}
+.st.nueva{background:var(--mango-soft);color:var(--warn)}
+.st.prox{background:transparent;border:1px solid var(--line);color:var(--muted)}
+/* Mi curso */
+.goalbig{font-family:var(--f-display);font-weight:800;font-size:36px;color:var(--sea);line-height:1;font-variant-numeric:tabular-nums}
+.bigbar{height:16px;border-radius:8px;background:var(--sea-soft);overflow:hidden;margin-top:10px;position:relative}
+.bigbar i{display:block;height:100%;background:var(--sea);border-radius:8px}
+.bigbar b{position:absolute;top:0;bottom:0;width:3px;background:var(--mango)}
+.cmp{display:grid;grid-template-columns:1fr auto auto;gap:6px 12px;align-items:center;font-size:14px}
+.cmp .h{font-size:12px;color:var(--muted);font-weight:700}
+.cmp .up{color:var(--ok);font-weight:700}
+.cmp .dn{color:var(--muted);font-weight:700}
+/* Liga */
+.rank{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:28px 52px 1fr auto;gap:10px;align-items:center}
+.pos{font-family:var(--f-display);font-weight:800;font-size:20px;color:var(--muted);text-align:center}
+.row:first-child .pos{color:var(--mango)}
+.curso{font-weight:700}
+.bar{height:12px;border-radius:6px;background:var(--sea-soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sea);border-radius:6px}
+.row:first-child .bar i{background:var(--mango)}
+.pts{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;min-width:54px}
+.pts small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+/* Profe */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi .n{font-family:var(--f-display);font-weight:800;font-size:30px;color:var(--sea);font-variant-numeric:tabular-nums}
+.kpi .t{font-size:12px;color:var(--muted)}
+.hbar{display:grid;grid-template-columns:110px 1fr 42px;gap:8px;align-items:center;font-size:13px;margin-top:8px}
+.hbar .bar i.low{background:var(--no)}
+.alert{display:flex;justify-content:space-between;gap:8px;padding-block:8px;border-top:1px solid var(--line);font-size:14px}
+.alert:first-of-type{border-top:none}
+.pill{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--mango-soft);color:var(--warn);white-space:nowrap}
+.nolist{margin:0;padding-left:18px;font-size:14px}
+.nolist li+li{margin-top:4px}
+/* Revisar */
+.feat{display:grid;gap:8px}
+.feat + .feat{margin-top:10px}
+.feat h3{margin:0;font-size:15px}
+.feat h3 .new{font-size:10px;font-weight:700;background:var(--mango);color:#2a1d00;border-radius:999px;padding:2px 7px;margin-left:6px;vertical-align:2px}
+.feat p{margin:0;font-size:13px;color:var(--muted)}
+.votes{display:flex;gap:6px;flex-wrap:wrap}
+.vote{flex:1;min-width:90px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:700}
+.vote.sel[data-v="si"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.vote.sel[data-v="ajustar"]{background:var(--warn);border-color:var(--warn);color:#fff}
+.vote.sel[data-v="no"]{background:var(--no);border-color:var(--no);color:#fff}
+textarea{width:100%;min-height:54px;border:1px solid var(--line);border-radius:10px;padding:8px;font:inherit;font-size:14px;background:var(--bg);color:var(--ink);resize:vertical}
+.tally{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tally span{font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.primary{width:100%;margin-top:14px;padding:13px;border:none;border-radius:12px;background:var(--sea);color:#fff;font-weight:700;font-size:15px}
+#resumen{width:100%;min-height:140px;margin-top:8px}
+/* Tabs */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.tab{background:none;border:none;padding:10px 2px 12px;color:var(--muted);font-size:11.5px;font-weight:700;display:grid;justify-items:center;gap:3px}
+.tab svg{width:22px;height:22px}
+.tab[aria-selected="true"]{color:var(--sea)}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .5s ease}}
+/* v7: animaciones. Todas se apagan si el celular tiene activado "reducir movimiento" */
+.ringwrap{display:flex;align-items:center;gap:12px}
+.ring{position:relative;width:96px;height:96px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9}
+.ring .rt{stroke:rgba(255,255,255,.22)}
+.ring .rf{stroke:var(--mango);stroke-linecap:round;stroke-dasharray:100 100;stroke-dashoffset:100}
+.ring .big{position:absolute;inset:0;display:grid;place-items:center;font-size:34px}
+.streak .flame{display:inline-block;font-size:22px;line-height:1}
+.mini{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px;max-width:180px}
+.mini i{display:block;height:100%;border-radius:3px;background:var(--mango)}
+.habit.done .mini i{background:var(--ok)}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+@media (prefers-reduced-motion:no-preference){
+  .ring .rf{transition:stroke-dashoffset .8s cubic-bezier(.3,1.3,.5,1)}
+  .mini i{animation:grow .6s ease-out}
+  @keyframes grow{from{width:var(--from,0%)}}
+  .habit.pop .ico,.habit.pop .check{animation:pop .55s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+  .habit.pop{animation:glow 1s ease-out}
+  @keyframes glow{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent)}100%{box-shadow:0 0 0 16px transparent}}
+  .dots i.new,.week i.new{animation:dot .6s ease-out;transform-origin:left}
+  @keyframes dot{from{transform:scaleX(0)}}
+  .streak.boom{animation:boom .9s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes boom{0%{transform:scale(1)}30%{transform:scale(1.25) rotate(-4deg)}60%{transform:scale(.95) rotate(2deg)}100%{transform:scale(1)}}
+  .streak .flame{animation:flick 1.6s ease-in-out infinite;transform-origin:50% 90%}
+  @keyframes flick{0%,100%{transform:scale(1) rotate(-4deg)}50%{transform:scale(1.15) rotate(4deg)}}
+  .tip.yay{animation:yay .8s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes yay{0%{transform:scale(1)}30%{transform:scale(1.04)}100%{transform:scale(1)}}
+  .bigbar i,.hbar .bar i,.qbar i{animation:fill 1.1s cubic-bezier(.2,.8,.2,1)}
+  @keyframes fill{from{width:0}}
+  .kpi .n,.goalbig{animation:rise .6s ease-out}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}}
+  .check,.round,.chip,.save,.mood{transition:transform .12s,background-color .2s}
+  .check:active,.round:active,.chip:active,.save:active,.mood:active{transform:scale(.9)}
+  .mood[aria-pressed="true"] span{animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+}
+[hidden]{display:none!important}
+/* v8: insignias */
+.bcard{margin-top:12px;padding-bottom:10px}
+.bhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.bhead b{font-family:var(--f-display);font-size:17px}
+.bhead span{font-size:12px;font-weight:700;color:var(--muted)}
+.badges{display:flex;gap:10px;overflow-x:auto;padding:10px 2px 6px;scroll-snap-type:x proximity;scrollbar-width:none}
+.badges::-webkit-scrollbar{display:none}
+.badge{flex:none;width:68px;border:none;background:none;padding:0;color:var(--ink);display:grid;justify-items:center;gap:4px;scroll-snap-align:start}
+.badge .medal{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:28px;background:var(--mango-soft);border:3px solid var(--mango);position:relative}
+.badge small{font-size:11px;font-weight:700;line-height:1.15;text-align:center}
+.badge.off .medal{background:var(--bg);border:2px dashed var(--line);filter:grayscale(1);opacity:.5}
+.badge.off small{color:var(--muted)}
+.badge.off .medal::after{content:"🔒";position:absolute;right:-4px;bottom:-4px;font-size:14px;filter:none}
+.badge[aria-pressed="true"] .medal{outline:3px solid var(--sea);outline-offset:2px}
+.bdesc{font-size:13px;margin:4px 0 0;color:var(--muted);min-height:18px}
+.toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-250%);z-index:60;background:var(--surface);color:var(--ink);border:2px solid var(--mango);border-radius:16px;padding:10px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);width:max-content;max-width:calc(100% - 32px)}
+.toast.show{transform:translate(-50%,0)}
+.toast .te{font-size:34px;line-height:1}
+.toast .tk{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--warn)}
+.toast .tn{font-family:var(--f-display);font-weight:800;font-size:17px}
+/* v8: cápsula en tarjetas deslizables */
+.capsd{padding:12px}
+.capsd .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--sea)}
+.deck{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:8px;scrollbar-width:none;overscroll-behavior-x:contain}
+.deck::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;min-height:270px;border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;justify-content:center;gap:10px;background:var(--sea-soft)}
+.slide:nth-child(even){background:var(--mango-soft)}
+.slide.cover{background:var(--sea);color:#fff;text-align:center;align-items:center}
+.slide .em{font-size:52px;line-height:1}
+.slide .big{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1.2;text-wrap:balance}
+.slide p{margin:0;font-size:16px;line-height:1.4}
+.slide ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:15px}
+.slide li{display:flex;gap:10px;align-items:center}
+.slide li span{font-size:24px}
+.slide cite{font-style:normal;font-size:11px;color:var(--muted)}
+.slide .swipe{font-size:13px;opacity:.85}
+.decknav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
+.decknav .ddots{display:flex;gap:6px}
+.decknav .ddots i{width:8px;height:8px;border-radius:4px;background:var(--line)}
+.decknav .ddots i.on{width:22px;background:var(--sea)}
+.decknav button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:18px;font-weight:700}
+.decknav button[disabled]{opacity:.35;cursor:default}
+@media (prefers-reduced-motion:no-preference){
+  .toast{transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
+  .badge.nuevo .medal{animation:pop .6s cubic-bezier(.3,1.6,.5,1),shine 1.6s ease-out}
+  @keyframes shine{0%{box-shadow:0 0 0 0 var(--mango)}100%{box-shadow:0 0 0 18px transparent}}
+  .toast.show .te{animation:pop .6s .15s cubic-bezier(.3,1.6,.5,1) both}
+  .decknav .ddots i{transition:width .3s,background-color .3s}
+  .slide.cover .em{animation:flick 2.2s ease-in-out infinite}
+  .deck{scroll-behavior:smooth}
+}
+</style></head><body>
+
+<div class="wrap">
+  <div class="proto"><b>Versión de prueba</b> · datos de ejemplo <button class="revlink" id="goRev" hidden>Revisar</button></div>
+  <header class="app">
+    <div class="brand">BH Pro<small>I.E. Benjamín Herrera · Arjona</small></div>
+    <div class="who" id="who"><b>Andrea M.</b>Grado 9.ºB</div>
+  </header>
+
+  <!-- HÁBITOS -->
+  <section id="v-habitos">
+    <div class="card survey">
+      <div><div class="k">Día 1 del piloto · 10 minutos</div><div style="font-weight:700">Encuesta de inicio: ¿qué tan activo eres?</div><div class="goal" style="font-size:12px;color:var(--muted)">Se repite al terminar el piloto para ver tu avance.</div></div>
+      <button class="go" id="openSurvey">Responder</button>
+    </div>
+    <div class="card hero">
+      <div class="ringwrap"><div class="ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="rt" cx="50" cy="50" r="44"/><circle class="rf" id="ring" cx="50" cy="50" r="44" pathLength="100"/></svg><div class="big" id="pts">0</div></div><div class="lbl" id="ptslbl">puntos del día (máx. 50)</div></div>
+      <div class="streak" id="streakBox"><span class="flame" aria-hidden="true">🔥</span><span id="streak">6</span>días de racha</div>
+      <div class="week" aria-label="Últimos 7 días"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i id="today"></i></div>
+    </div>
+    <div class="card bcard">
+      <div class="bhead"><b>Mis insignias</b><span id="bcount"></span></div>
+      <div class="badges" id="badges"></div>
+      <p class="bdesc" id="bdesc" aria-live="polite">Toca una insignia para ver cómo se gana.</p>
+    </div>
+    <div class="day" role="group" aria-label="Día que vas a registrar">
+      <button data-d="hoy" aria-pressed="true">Hoy</button>
+      <button data-d="ayer" aria-pressed="false">Ayer (se me olvidó)</button>
+    </div>
+    <h2>Mi día</h2>
+    <p class="sub">Menos de un minuto. Cumplir la meta da 10 puntos. Tu racha sube cuando registras y cumples <b>al menos 3 de los 5 hábitos</b>. Nadie más ve tus datos: registra lo que de verdad hiciste.</p>
+    <div class="habits" id="habits"></div>
+    <div class="tip" id="rachaHint" style="margin-top:10px"></div>
+
+    <div class="card reto habit" id="reto"></div>
+
+    <button class="save" id="save">Guardar mi día</button>
+    <div class="msg" id="msg" aria-live="polite"></div>
+
+    <div class="tip"><b>Dato del profe:</b> con el calor de Arjona, el cuerpo pierde más agua sudando. Si tu orina sale oscura, te falta agua. Toma antes, durante y después de Educación Física, aunque no sientas sed. <a href="#" id="goAprende" style="color:var(--sea);font-weight:700">Más en Aprende</a></div>
+  </section>
+
+  <!-- APRENDE -->
+  <section id="v-aprende" hidden>
+    <h2>Aprende</h2>
+    <p class="sub">El profe publica un tip cada día y una cápsula cada lunes. Leer toma menos de 3 minutos.</p>
+    <div class="card tipday">
+      <div class="k">Tip de hoy</div>
+      <p id="tipTxt"></p>
+      <button id="tipNext">Ver otro tip</button>
+    </div>
+
+    <h2>Cápsula de la semana</h2>
+    <div class="card capsd">
+      <div class="k">Semana 2 · Sueño · 6 tarjetas</div>
+      <div class="deck" id="deck">
+        <div class="slide cover"><div class="em">😴</div><div class="big">¿Por qué te da sueño tan tarde?</div><div class="swipe">Desliza para leer →</div></div>
+        <div class="slide"><div class="em">🕘</div><div class="big">No es pereza.</div><p>En la adolescencia el reloj del cuerpo se corre: la melatonina, la hormona que da sueño, sale más tarde que en los niños y los adultos.</p></div>
+        <div class="slide"><div class="em">⏰</div><p>Por eso a las <b>9 p. m.</b> no tienes sueño…</p><p>…pero a las <b>6 a. m.</b> el colegio te pide estar despierto.</p></div>
+        <div class="slide"><div class="em">📉</div><div class="big">Necesitas de 8 a 10 horas.</div><p>Muchos jóvenes duermen menos. Eso afecta la memoria, el ánimo y hasta el rendimiento en el deporte.</p></div>
+        <div class="slide"><div class="big">Qué sí ayuda</div><ul>
+          <li><span>⏰</span>Levántate a la misma hora todos los días, también el finde.</li>
+          <li><span>📵</span>Celular fuera de la cama 30 min antes de dormir.</li>
+          <li><span>🥤</span>Nada de café, energizantes ni cola después del almuerzo.</li>
+          <li><span>💤</span>Siesta corta (20 a 30 min) y antes de las 3 p. m.</li></ul></div>
+        <div class="slide"><div class="em">🎯</div><div class="big">Tu reto de la semana</div><p>Elige uno de los cuatro trucos y anótalo en tu cuaderno de Educación Física.</p>
+          <cite>Fuentes: Academia Americana de Medicina del Sueño (Paruthi y col., 2016); Academia Americana de Pediatría (2014).</cite>
+          <button class="readb" id="readb" aria-pressed="false">Ya la leí</button></div>
+      </div>
+      <div class="decknav"><button id="dprev" aria-label="Tarjeta anterior">‹</button><div class="ddots" id="ddots"></div><button id="dnext" aria-label="Tarjeta siguiente">›</button></div>
+    </div>
+
+    <h2>Pregunta rápida</h2>
+    <div class="card quiz">
+      <div class="q">"Si no tengo sed, no necesito tomar agua." ¿Verdadero o falso?</div>
+      <div class="opts"><button data-a="v">Verdadero</button><button data-a="f">Falso</button></div>
+      <p class="ans" id="quizAns" aria-live="polite" hidden><b>Falso.</b> Con calor y ejercicio la sed llega tarde, cuando el cuerpo ya perdió agua. En Arjona conviene tomar agua de forma regular, antes, durante y después de moverte.</p>
+    </div>
+
+    <h2>Todas las cápsulas</h2>
+    <div class="card lib">
+      <div><span>Muévete 60 minutos sin correr al sol<small>Semana 1 · Movimiento</small></span><span class="st">Leída</span></div>
+      <div><span>¿Por qué te da sueño tan tarde?<small>Semana 2 · Sueño</small></span><span class="st nueva" id="libSueno">Nueva</span></div>
+      <div><span>Agua y calor: cuánto y cuándo<small>Semana 3 · Hidratación</small></span><span class="st prox">Lunes</span></div>
+      <div><span>Fuerza sin pesas: segura y en casa<small>Semana 4 · Fuerza</small></span><span class="st prox">Próxima</span></div>
+      <div><span>La gaseosa por dentro<small>Semana 5 · Alimentación</small></span><span class="st prox">Próxima</span></div>
+      <div><span>El celular y tu ánimo<small>Semana 6 · Pantallas y bienestar</small></span><span class="st prox">Próxima</span></div>
+    </div>
+  </section>
+
+  <!-- ENCUESTA PAQ-A -->
+  <section id="v-encuesta" hidden>
+    <h2>Encuesta de inicio</h2>
+    <div class="qn" id="qn"></div>
+    <div class="prog"><i id="qprog"></i></div>
+    <div class="card" id="qbox"></div>
+    <div class="nav2"><button id="qprev">Anterior</button><button class="fw" id="qnext">Siguiente</button></div>
+    <p class="note">Muestra para ver cómo se vería. Las preguntas están resumidas a partir del PAQ-A (Kowalski y col., 2004; versión en español de Martínez-Gómez y col., 2009). Para el piloto se usa el texto validado completo.</p>
+  </section>
+
+  <!-- BIENESTAR -->
+  <section id="v-bienestar" hidden>
+    <h2>Bienestar</h2>
+    <p class="sub">Cuidar la mente también es un hábito saludable. Aquí no hay puntos ni metas.</p>
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:10px">¿Cómo te sientes hoy?</div>
+      <div class="moods" id="moods">
+        <button class="mood" data-m="4" aria-pressed="false"><span>😄</span>Muy bien</button>
+        <button class="mood" data-m="3" aria-pressed="false"><span>🙂</span>Bien</button>
+        <button class="mood" data-m="2" aria-pressed="false"><span>😐</span>Normal</button>
+        <button class="mood" data-m="1" aria-pressed="false"><span>😕</span>Mal</button>
+        <button class="mood" data-m="0" aria-pressed="false"><span>😢</span>Muy mal</button>
+      </div>
+      <p class="moodmsg" id="moodMsg" aria-live="polite" hidden></p>
+      <div class="priv"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Solo tú ves esta respuesta. No se envía al profe, ni a tu curso, ni a nadie.</span></div>
+    </div>
+
+    <h2>Herramientas de 2 minutos</h2>
+    <div class="tools">
+      <div class="card tool" id="breathCard">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M5 16h6"/></svg></div>
+        <div><div class="name">Respira en cuadro</div><div class="goal">Calma los nervios antes de un examen o una pelea</div></div>
+        <button class="go" id="breathBtn">Empezar</button>
+        <div class="breath" id="breath" hidden>
+          <div class="circle" id="circle">Listo</div>
+          <div class="sub" style="margin:0;text-align:center" id="breathTxt">Inhala 4 segundos, sostén 4, exhala 4, sostén 4. Repite 4 veces.</div>
+        </div>
+      </div>
+      <div class="card tool">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="14" cy="4" r="2"/><path d="M7 21l3-6 3 2v4M10 15l1-5 4 2 3-1M8 10l3-1"/></svg></div>
+        <div><div class="name">Muévete para despejarte</div><div class="goal">5 minutos de caminar, estirar o bailar tu canción favorita</div></div>
+        <span class="score">+ ánimo</span>
+      </div>
+      <div class="card tool">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div><div class="name">Habla con alguien</div><div class="goal">Cuéntale a un amigo o a un adulto de confianza cómo te sientes</div></div>
+        <span class="score">Hoy</span>
+      </div>
+    </div>
+
+    <div class="tip"><b>¿Sabías que…?</b> moverse con regularidad ayuda a reducir el estrés, la ansiedad y la tristeza, y mejora el sueño. Tus hábitos de BH Pro también cuidan tu mente. <span style="display:block;font-size:11px;color:var(--muted);margin-top:4px">Fuente: OMS, Directrices sobre actividad física, 2020.</span></div>
+
+    <h2>¿Necesitas ayuda?</h2>
+    <div class="card help" id="help">
+      <h3>No estás solo. Pedir ayuda es de valientes.</h3>
+      <ul>
+        <li><b>En el colegio:</b> Orientación escolar, oficina de psicorientación. También puedes hablar con tu director de grupo o con el profe de Educación Física.</li>
+        <li><b>Línea de salud mental:</b> <a href="tel:192">192, opción 4</a> (Ministerio de Salud, gratuita).</li>
+        <li><b>Si alguien te hace daño:</b> <a href="tel:141">Línea 141</a> del ICBF, gratuita.</li>
+        <li><b>Emergencia:</b> <a href="tel:123">123</a>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- MI CURSO -->
+  <section id="v-liga" hidden>
+    <h2>Mi curso: 9.ºB</h2>
+    <p class="sub">Aquí no hay ranking entre cursos ni entre compañeros. El curso trabaja unido por una meta, y cada uno se compara solo con su semana pasada.</p>
+    <div class="card">
+      <div class="sub" style="margin:0 0 6px">Meta del curso esta semana</div>
+      <div style="font-weight:700">Que el 80% del curso registre al menos 5 de 7 días</div>
+      <div class="goalbig" style="margin-top:8px">72%</div>
+      <div class="bigbar" aria-label="72% de 80%"><i style="width:72%"></i><b style="left:80%"></b></div>
+      <p class="sub" style="margin:8px 0 0">Faltan 3 compañeros para llegar. Anímalos a registrar.</p>
+    </div>
+    <div class="tip"><b>Si el curso llega a la meta:</b> elige el juego o la actividad de la próxima clase de Educación Física, y se le reconoce en la izada de bandera. Todos los cursos que lleguen ganan, no solo uno.</div>
+    <h2>Hábito del mes en el curso</h2>
+    <div class="card">
+      <div style="font-weight:700">Sueño de 8 a 10 horas</div>
+      <p class="sub" style="margin:4px 0 0">Es el hábito más bajo del curso (41%). Este mes el Dato del profe y el reto de la clase giran alrededor del sueño.</p>
+    </div>
+    <h2>Mi semana contra la semana pasada</h2>
+    <div class="card cmp">
+      <span class="h">Hábito</span><span class="h">Antes</span><span class="h">Ahora</span>
+      <span>Movimiento</span><span>3 días</span><span class="up">5 días ↑</span>
+      <span>Agua</span><span>2 días</span><span class="up">4 días ↑</span>
+      <span>Sueño</span><span>2 días</span><span class="dn">2 días =</span>
+      <span>Frutas y verduras</span><span>4 días</span><span class="up">5 días ↑</span>
+      <span>Celular lejos</span><span>1 día</span><span class="up">2 días ↑</span>
+    </div>
+  </section>
+
+  <!-- PROFE -->
+  <section id="v-profe" hidden>
+    <h2>Panel del profe</h2>
+    <p class="sub">Vista solo para el docente · 9.º y 10.º · 128 estudiantes en el piloto</p>
+    <div class="kpis">
+      <div class="card kpi"><div class="n">72%</div><div class="t">registró al menos 5 de 7 días</div></div>
+      <div class="card kpi"><div class="n">31</div><div class="t">puntos promedio por día</div></div>
+    </div>
+    <h2>Cumplimiento por hábito</h2>
+    <div class="card" id="hb"></div>
+    <h2>Requieren atención</h2>
+    <div class="card">
+      <div class="alert"><span>Carlos P. · 10.ºA</span><span class="pill">4 días sin registro</span></div>
+      <div class="alert"><span>Valentina R. · 9.ºA</span><span class="pill">3 noches con menos de 6 h</span></div>
+      <div class="alert"><span>Grado 10.ºB</span><span class="pill">Bajó 18% esta semana</span></div>
+    </div>
+    <h2>Aprende</h2>
+    <div class="card">
+      <div class="alert"><span>Cápsula de sueño (semana 2)</span><span class="pill">64% la leyó</span></div>
+      <div class="alert"><span>Pregunta rápida del agua</span><span class="pill">81% acertó</span></div>
+      <div class="alert"><span>Próxima publicación</span><span class="pill">Lunes 6:00 a. m.</span></div>
+    </div>
+    <h2>Encuesta PAQ-A</h2>
+    <div class="kpis">
+      <div class="card kpi"><div class="n">112/128</div><div class="t">respondieron la encuesta de inicio</div></div>
+      <div class="card kpi"><div class="n">2,4</div><div class="t">nivel promedio de actividad (escala 1 a 5)</div></div>
+    </div>
+    <p class="sub" style="margin:8px 0 0">La encuesta final se abre el día 21. Resultados por curso: 9.ºA 2,3 · 9.ºB 2,6 · 10.ºA 2,5 · 10.ºB 2,2.</p>
+    <h2>Bienestar</h2>
+    <div class="card">
+      <p class="sub" style="margin:0">El estado de ánimo de cada estudiante es privado y no aparece aquí. Solo se ve cuántos usaron las herramientas (por curso): <b style="color:var(--ink)">9.ºB 58% esta semana</b>.</p>
+    </div>
+    <h2>Lo que la app no pide</h2>
+    <div class="card">
+      <ul class="nolist">
+        <li>Peso, talla, IMC ni calorías.</li>
+        <li>Fotos, ubicación ni número de celular.</li>
+        <li>Diagnósticos ni cuestionarios de salud mental.</li>
+        <li>Datos de la familia o del barrio.</li>
+      </ul>
+      <p class="sub" style="margin:8px 0 0">Solo código o nombre y curso. Los resultados que salen del aula se muestran por curso.</p>
+    </div>
+  </section>
+
+  <!-- REVISAR -->
+  <section id="v-revisar" hidden>
+    <h2>Revisión del prototipo v8</h2>
+    <p class="sub">Marque cada función. Las que dicen <b>Nuevo</b> cambiaron en esta versión. Al final copie el resumen y péguelo en el chat.</p>
+    <div class="tally" id="tally"></div>
+    <div id="feats"></div>
+    <button class="primary" id="copy">Copiar resumen de la revisión</button>
+    <div class="msg" id="copied" aria-live="polite"></div>
+    <textarea id="resumen" readonly aria-label="Resumen de la revisión"></textarea>
+  </section>
+</div>
+
+<nav class="tabs"><div role="tablist">
+  <button class="tab" role="tab" data-v="habitos" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>Hábitos</button>
+  <button class="tab" role="tab" data-v="aprende" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2zM22 5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7z"/></svg>Aprende</button>
+  <button class="tab" role="tab" data-v="bienestar" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Bienestar</button>
+  <button class="tab" role="tab" data-v="liga" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M15 20a4.5 4.5 0 0 1 6.5-4"/></svg>Mi curso</button>
+  <button class="tab" role="tab" data-v="profe" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Profe</button>
+</div></nav>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="te" id="toastE"></span><div><div class="tk">¡Nueva insignia!</div><div class="tn" id="toastN"></div></div></div>
+
+<script>
+const S = (k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const W = (k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+
+/* ---------- Tabs ---------- */
+function showView(v){
+  ['habitos','aprende','bienestar','liga','profe','revisar','encuesta'].forEach(x=>document.getElementById('v-'+x).hidden = x!==v);
+  document.getElementById('who').hidden = v==='profe'||v==='revisar';
+  window.scrollTo(0,0);
+}
+document.getElementById('goRev').addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',false));
+  showView('revisar');
+});
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===t));
+  showView(t.dataset.v);
+}));
+
+/* ---------- Hábitos ----------
+   Cada hábito devuelve 0, 5 o 10 puntos con su función pts().
+   Tipos: chips (opciones rápidas), count (contador −/+), check (sí/no). */
+const icons = {
+  mover:'<circle cx="14" cy="4" r="2"/><path d="M7 21l3-6 3 2v4M10 15l1-5 4 2 3-1M8 10l3-1"/>',
+  agua:'<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>',
+  sueno:'<path d="M20 15A8 8 0 1 1 9 4a6 6 0 0 0 11 11z"/>',
+  fruta:'<circle cx="12" cy="14" r="7"/><path d="M12 7c0-2 1-4 3-4"/>',
+  pantalla:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M4 4l16 16"/>',
+  fuerza:'<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>'
+};
+const H = [
+  {id:'mover', name:'Movimiento', goal:'Hoy · meta 60 min (sudar o respirar rápido)', type:'chips', full:60,
+   opts:[[0,'0'],[15,'15'],[30,'30'],[45,'45'],[60,'60+']], v:45,
+   pts:v=>v>=60?10:v>=30?5:0,
+   why:'La OMS recomienda a los adolescentes un promedio de 60 minutos diarios de actividad moderada a vigorosa. Todo suma: la clase de Educación Física, el recreo, ir a pie o en bici al colegio, bailar, jugar bola de trapo. Con el calor, mejor temprano o al caer la tarde.',
+   src:'OMS, Directrices sobre actividad física y hábitos sedentarios, 2020.'},
+  {id:'agua', name:'Agua', goal:'Hoy · meta 8 vasos (≈ 2 litros)', type:'count', meta:8, full:8, v:5,
+   pts:v=>v>=8?10:v>=5?5:0,
+   why:'Entre los 14 y 18 años se necesitan cerca de 2 litros de bebidas al día, y más con calor y ejercicio. Cuenta agua, bolsa de agua, agua de panela o jugo natural. La gaseosa no cuenta.',
+   src:'IOM (EE. UU.), Ingestas de referencia de agua, 2004; EFSA, 2010.'},
+  {id:'sueno', name:'Sueño', goal:'Anoche · meta 8 a 10 horas', type:'chips', full:8,
+   opts:[[5,'−6'],[6,'6'],[7,'7'],[8,'8'],[9,'9'],[10,'10+']], v:7,
+   pts:v=>v>=8?10:v===7?5:0,
+   why:'Los expertos en sueño recomiendan de 8 a 10 horas para jóvenes de 13 a 18 años. Dormir bien mejora la memoria, el ánimo, la atención en clase y el rendimiento en el deporte.',
+   src:'Academia Americana de Medicina del Sueño (Paruthi y col., 2016).'},
+  {id:'fruta', name:'Frutas y verduras', goal:'Hoy · meta 3 porciones', type:'count', meta:3, full:3, v:2,
+   pts:v=>v>=3?10:0,
+   why:'Una porción es un mango pequeño, una guayaba, una tajada de patilla, un guineo o un plato pequeño de ensalada. La del PAE también cuenta. La OMS recomienda 5 porciones diarias; en el piloto empezamos con 3 para que sea alcanzable.',
+   src:'OMS, Alimentación sana, 2020; ICBF, Guías alimentarias para la población colombiana.'},
+  {id:'pantalla', name:'Celular lejos antes de dormir', goal:'Anoche · 30 minutos antes de acostarme', type:'check', v:false,
+   pts:v=>v?10:0,
+   why:'La luz y los mensajes del celular le avisan al cerebro que todavía es de día y retrasan el sueño. Las guías recomiendan dejar las pantallas por lo menos 30 a 60 minutos antes de dormir.',
+   src:'Academia Americana de Pediatría; OMS 2020 (limitar pantallas recreativas).'}
+];
+const RETO = {id:'fuerza', name:'Reto de la semana: fuerza', goal:'10 min de sentadillas, flexiones, saltos o plancha · meta 3 días', hechos:2, hoy:false,
+  why:'Además de los 60 minutos, la OMS pide actividades que fortalezcan músculos y huesos al menos 3 días por semana. Se puede hacer en la casa, sin pesas y en 10 minutos.',
+  src:'OMS, Directrices sobre actividad física, 2020.'};
+
+/* ---------- Animaciones (v7) ----------
+   Confeti en canvas, contador de puntos y detección de metas recién cumplidas.
+   Si el celular pide reducir movimiento, no se lanza nada. */
+const calm=matchMedia('(prefers-reduced-motion: reduce)');
+const cv=document.createElement('canvas'); cv.id='confetti'; cv.setAttribute('aria-hidden','true'); document.body.appendChild(cv);
+const cx=cv.getContext('2d'); let parts=[], raf=0;
+const COLS=['#f2a516','#0f6b5c','#4cc3aa','#1f8a4c','#ef6b5c','#ffd166'];
+function confetti(x,y,n,burst){
+  if(calm.matches) return;
+  if(!raf){const d=devicePixelRatio||1; cv.width=innerWidth*d; cv.height=innerHeight*d; cx.setTransform(d,0,0,d,0,0)}
+  for(let i=0;i<n;i++){
+    const a=burst?Math.random()*Math.PI*2:-Math.PI/2+(Math.random()-.5)*1.1, v=burst?2+Math.random()*5:10+Math.random()*7;
+    parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:Math.random()*6.3,vr:(Math.random()-.5)*.3,w:5+Math.random()*5,h:3+Math.random()*4,c:COLS[i%COLS.length],t:0});
+  }
+  if(!raf) raf=requestAnimationFrame(step);
+}
+function step(){
+  cx.clearRect(0,0,innerWidth,innerHeight);
+  parts=parts.filter(p=>p.t<150&&p.y<innerHeight+30);
+  for(const p of parts){
+    p.vy+=.22; p.vx*=.98; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; p.t++;
+    cx.save(); cx.globalAlpha=Math.max(0,1-p.t/150); cx.translate(p.x,p.y); cx.rotate(p.r);
+    cx.fillStyle=p.c; cx.fillRect(-p.w/2,-p.h/2,p.w,p.h); cx.restore();
+  }
+  raf=parts.length?requestAnimationFrame(step):0;
+}
+const burstAt=(el,n=30)=>{const r=el.getBoundingClientRect(); confetti(r.left+r.width/2,r.top+r.height/2,n,true)};
+const fiesta=()=>{confetti(innerWidth*.2,innerHeight,70,false); confetti(innerWidth*.8,innerHeight,70,false)};
+const replay=(el,c)=>{el.classList.remove(c); void el.offsetWidth; el.classList.add(c)};
+let shown=0, tok=0;
+function countTo(el,to){
+  const from=shown, t0=performance.now(), my=++tok; shown=to;
+  if(calm.matches||from===to){el.textContent=to; return}
+  const f=t=>{if(my!==tok) return; const k=Math.min(1,(t-t0)/450); el.textContent=Math.round(from+(to-from)*(1-(1-k)**3)); if(k<1) requestAnimationFrame(f)};
+  requestAnimationFrame(f);
+}
+const frac=h=>Math.min(1,h.type==='check'?(h.v?1:0):h.v/h.full);
+const prevP={}, prevF={}; let first=true, prevMetas=0, prevRetoN=null;
+
+/* ---------- Insignias (v8) ----------
+   Se ganan una vez y quedan. En el prototipo se reinician al recargar. */
+const BADGES=[
+  {id:'primer',e:'✅',n:'Primer registro',d:'Registraste tu primer día en BH Pro.',on:true},
+  {id:'racha3',e:'🔥',n:'Racha de 3',d:'3 días seguidos sumando a tu racha.',on:true},
+  {id:'agua',e:'💧',n:'Hidratado',d:'Cumple la meta de 8 vasos de agua en un día.'},
+  {id:'mover',e:'🏃',n:'60 minutos',d:'Cumple la meta de 60 minutos de movimiento.'},
+  {id:'sueno',e:'😴',n:'Buen sueño',d:'Duerme de 8 a 10 horas en una noche.'},
+  {id:'fruta',e:'🍉',n:'Frutero',d:'Come 3 porciones de frutas y verduras en un día.'},
+  {id:'pantalla',e:'📵',n:'Desconectado',d:'Deja el celular 30 minutos antes de dormir.'},
+  {id:'fuerza',e:'💪',n:'Fuerza x3',d:'Haz el reto de fuerza 3 días en la semana.'},
+  {id:'racha7',e:'🏆',n:'Semana de fuego',d:'Completa 7 días de racha.'},
+  {id:'lector',e:'📚',n:'Lector',d:'Lee la cápsula de la semana hasta el final.'},
+  {id:'sabe',e:'🧠',n:'Sabelotodo',d:'Acierta la pregunta rápida de Aprende.'}
+];
+const bEl=document.getElementById('badges'); let bSel=null;
+function renderB(nuevo){
+  bEl.innerHTML=BADGES.map(b=>`<button class="badge${b.on?'':' off'}${b.id===nuevo?' nuevo':''}" data-b="${b.id}" aria-pressed="${bSel===b.id}" aria-label="${b.n}${b.on?'':' (bloqueada)'}"><span class="medal">${b.e}</span><small>${b.n}</small></button>`).join('');
+  document.getElementById('bcount').textContent=BADGES.filter(b=>b.on).length+' de '+BADGES.length;
+}
+bEl.addEventListener('click',e=>{
+  const t=e.target.closest('.badge'); if(!t) return;
+  const b=BADGES.find(x=>x.id===t.dataset.b); bSel=bSel===b.id?null:b.id; renderB();
+  document.getElementById('bdesc').innerHTML=bSel?(b.on?`<b>${b.n}:</b> ${b.d} ¡Ya la tienes!`:`🔒 <b>${b.n}:</b> ${b.d}`):'Toca una insignia para ver cómo se gana.';
+});
+const tq=[]; let tBusy=false;
+function unlock(id){
+  const b=BADGES.find(x=>x.id===id); if(!b||b.on) return;
+  b.on=true; renderB(id);
+  const t=bEl.querySelector(`[data-b="${id}"]`); if(t) bEl.scrollTo({left:t.offsetLeft-bEl.offsetLeft-bEl.clientWidth/2+34,behavior:calm.matches?'auto':'smooth'});
+  tq.push(b); if(!tBusy) nextToast();
+}
+function nextToast(){
+  const b=tq.shift(), el=document.getElementById('toast'); if(!b){tBusy=false;return}
+  tBusy=true; document.getElementById('toastE').textContent=b.e; document.getElementById('toastN').textContent=b.n;
+  el.classList.add('show');
+  setTimeout(()=>burstAt(document.getElementById('toastE'),40),250);
+  setTimeout(()=>{el.classList.remove('show'); setTimeout(nextToast,450)},2400);
+}
+renderB();
+
+let day='hoy', saved={hoy:false,ayer:true}, openWhy=null;
+const hEl = document.getElementById('habits'), rEl=document.getElementById('reto');
+const svg=id=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${icons[id]}</svg>`;
+const whyBlock=h=>openWhy===h.id?`<p class="why">${h.why}<cite>Fuente: ${h.src}</cite></p>`:'';
+function renderH(){
+  hEl.innerHTML = H.map((h,i)=>{
+    const p=h.pts(h.v), f=Math.round(frac(h)*100), from=prevF[h.id]??f;
+    const nuevo=!first&&(prevP[h.id]??0)<10&&p===10;
+    const cls=(p===10?'done':p===5?'half':'')+(nuevo?' pop':'');
+    let ctrl='';
+    if(h.type==='check') ctrl=`<button class="check" data-i="${i}" aria-label="Marcar ${h.name}" aria-pressed="${h.v}">✓</button>`;
+    else if(h.type==='count') ctrl=`<div class="ctrl"><button class="round" data-i="${i}" data-d="-1" aria-label="Menos">−</button><span class="val">${h.v}</span><button class="round" data-i="${i}" data-d="1" aria-label="Más">+</button></div>`;
+    else ctrl=`<span class="score">${p} pts</span><div class="chips">${h.opts.map(o=>`<button class="chip" data-i="${i}" data-o="${o[0]}" aria-pressed="${h.v===o[0]}">${o[1]}</button>`).join('')}</div>`;
+    return `<div class="card habit ${cls}">
+      <div class="ico">${svg(h.id)}</div>
+      <div><div class="name">${h.name}</div><div class="goal">${h.goal}</div>
+        <div class="mini" aria-hidden="true"><i style="--from:${from}%;width:${f}%"></i></div>
+        <button class="whyb" data-w="${h.id}" aria-expanded="${openWhy===h.id}">¿Por qué?</button>${h.type!=='chips'?` <span class="score">· ${p} pts</span>`:''}</div>
+      ${ctrl}${whyBlock(h)}</div>`}).join('');
+  const nuevos=H.map((h,i)=>!first&&(prevP[h.id]??0)<10&&h.pts(h.v)===10?i:-1).filter(i=>i>=0);
+  H.forEach(h=>{prevP[h.id]=h.pts(h.v); prevF[h.id]=Math.round(frac(h)*100)});
+  const r=RETO, n=r.hechos+(r.hoy?1:0), retoNuevo=prevRetoN!==null&&n>prevRetoN;
+  rEl.className='card reto habit'+(r.hoy?' done':'')+(retoNuevo?' pop':'');
+  rEl.innerHTML=`<div class="ico">${svg('fuerza')}</div>
+    <div><div class="tag">Bono +10</div><div class="name">${r.name}</div><div class="goal">${r.goal}</div>
+      <div class="dots" aria-label="${n} de 3 días">${[0,1,2].map(k=>`<i class="${k<n?'on':''}${retoNuevo&&k===n-1?' new':''}"></i>`).join('')}</div>
+      <button class="whyb" data-w="fuerza" aria-expanded="${openWhy==='fuerza'}">¿Por qué?</button></div>
+    <button class="check" id="retoBtn" aria-label="Hice el reto hoy" aria-pressed="${r.hoy}">✓</button>${whyBlock(r)}`;
+  const base=H.reduce((s,h)=>s+h.pts(h.v),0), bono=r.hoy?10:0;
+  countTo(document.getElementById('pts'), base+bono);
+  document.getElementById('ring').style.strokeDashoffset = 100-Math.min(100,(base+bono)/50*100);
+  nuevos.forEach(i=>{burstAt(hEl.children[i].querySelector('.ico')); unlock(H[i].id)});
+  if(retoNuevo) burstAt(rEl.querySelector('.check'),40);
+  if(retoNuevo&&n>=3) unlock('fuerza');
+  prevRetoN=n;
+  document.getElementById('ptslbl').textContent = (day==='hoy'?'puntos de hoy':'puntos de ayer')+' (máx. 50'+(bono?' + bono':'')+')';
+  const b=document.getElementById('save');
+  b.disabled=saved[day]; b.textContent=saved[day]?'Día guardado ✓':'Guardar mi día';
+  const metas=H.filter(h=>h.pts(h.v)===10).length, cuenta=metas>=3;
+  document.getElementById('rachaHint').innerHTML = cuenta
+    ? `<b>Racha:</b> llevas ${metas} de 5 hábitos cumplidos. Al guardar, este día suma a tu racha.`
+    : `<b>Racha:</b> llevas ${metas} de 5 hábitos cumplidos. Te ${3-metas===1?'falta 1':'faltan '+(3-metas)} para que el día sume a tu racha. Si no llegas, guárdalo igual: el profe ve tu esfuerzo.`;
+  document.getElementById('today').className = saved.hoy&&cuenta?'on':'';
+  document.getElementById('streak').textContent = saved.hoy&&cuenta?7:6;
+  if(!first&&cuenta&&prevMetas<3) replay(document.getElementById('rachaHint'),'yay');
+  prevMetas=metas; first=false;
+}
+function onClick(e){
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.w){openWhy=openWhy===b.dataset.w?null:b.dataset.w; renderH(); return}
+  if(b.id==='retoBtn'){RETO.hoy=!RETO.hoy}
+  else{
+    const h=H[+b.dataset.i];
+    if(h.type==='check') h.v=!h.v;
+    else if(h.type==='chips') h.v=+b.dataset.o;
+    else h.v=Math.max(0,Math.min(12,h.v+ +b.dataset.d));
+  }
+  saved[day]=false; document.getElementById('msg').textContent=''; renderH();
+}
+hEl.addEventListener('click',onClick); rEl.addEventListener('click',onClick);
+document.querySelectorAll('.day button').forEach(b=>b.addEventListener('click',()=>{
+  day=b.dataset.d;
+  document.querySelectorAll('.day button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  document.getElementById('msg').textContent = day==='ayer'?'Solo se puede completar el día anterior, para quien no tuvo datos o celular.':'';
+  renderH();
+}));
+document.getElementById('save').addEventListener('click',()=>{
+  saved[day]=true; renderH();
+  const ok=H.filter(h=>h.pts(h.v)===10).length>=3;
+  if(day==='hoy'&&ok){
+    replay(document.getElementById('streakBox'),'boom');
+    replay(document.getElementById('today'),'new');
+    fiesta(); unlock('racha7');
+  }
+  document.getElementById('msg').textContent = day==='hoy'?(ok?'¡Registro guardado! Llevas 7 días de racha. 🔥':'Registro guardado. Hoy no sumó a la racha, mañana sí.'):'Registro de ayer guardado.';
+});
+renderH();
+
+/* ---------- Encuesta PAQ-A (muestra) ----------
+   Cada pregunta puntúa de 1 a 5; la 1 y la 8 son el promedio de sus filas. La 9 no puntúa. */
+const F5=['No','1–2','3–4','5–6','7+'];
+const Q=[
+  {t:'En los últimos 7 días, ¿cuántas veces hiciste estas actividades en tu tiempo libre?',type:'grid',cols:F5,
+   rows:['Fútbol o microfútbol','Béisbol o softbol','Baloncesto o voleibol','Correr o trotar','Montar bicicleta','Bailar (champeta, salsa, etc.)','Juegos de calle (la lleva, escondidas)','Caminar como ejercicio','Saltar la cuerda','Otra actividad']},
+  {t:'En los últimos 7 días, en las clases de Educación Física, ¿cuántas veces estuviste muy activo (jugando fuerte, corriendo, saltando)?',
+   o:['No tuve clase de Educación Física o no participé','Casi nunca','Algunas veces','A menudo','Siempre']},
+  {t:'En los últimos 7 días, ¿qué hiciste normalmente en el descanso?',
+   o:['Estar sentado (hablar, leer, usar el celular)','Estar de pie o caminar por ahí','Correr o jugar un poco','Correr y jugar bastante','Correr y jugar fuerte casi todo el tiempo']},
+  {t:'En los últimos 7 días, justo después del colegio hasta las 6 p. m., ¿cuántos días hiciste deporte, baile o juegos en los que estuviste muy activo?',
+   o:['Ninguno','1 día','2 o 3 días','4 días','5 días o más']},
+  {t:'En los últimos 7 días, entre las 6 y las 10 p. m., ¿cuántos días hiciste deporte, baile o juegos en los que estuviste muy activo?',
+   o:['Ninguno','1 día','2 o 3 días','4 o 5 días','6 o 7 días']},
+  {t:'El último fin de semana, ¿cuántas veces hiciste deporte, baile o juegos en los que estuviste muy activo?',
+   o:['Ninguna','1 vez','2 o 3 veces','4 o 5 veces','6 veces o más']},
+  {t:'¿Cuál frase describe mejor tu última semana? Lee las cinco antes de elegir.',
+   o:['Casi todo mi tiempo libre lo pasé en actividades de poco esfuerzo físico','Algunas veces (1 o 2) hice actividad física en mi tiempo libre','A menudo (3 o 4 veces) hice actividad física en mi tiempo libre','Bastante a menudo (5 o 6 veces) hice actividad física en mi tiempo libre','Muy a menudo (7 o más veces) hice actividad física en mi tiempo libre']},
+  {t:'¿Cuánta actividad física hiciste cada día de la semana pasada?',type:'grid',cols:['Nada','Poca','Normal','Bastante','Mucha'],
+   rows:['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo']},
+  {t:'¿Estuviste enfermo la semana pasada o algo te impidió hacer actividad física como siempre?',o:['No','Sí'],noscore:true}
+];
+const QA=Q.map(q=>q.type==='grid'?q.rows.map(()=>null):null);
+let qi=0;
+const qbox=document.getElementById('qbox');
+function qDone(i){const a=QA[i];return Array.isArray(a)?a.every(x=>x!==null):a!==null}
+function renderQ(){
+  if(qi>=Q.length){return renderResult()}
+  const q=Q[qi];
+  document.getElementById('qn').textContent=`Pregunta ${qi+1} de ${Q.length}`;
+  document.getElementById('qprog').style.width=(qi/Q.length*100)+'%';
+  let body='';
+  if(q.type==='grid') body=`<div class="grid5">${q.rows.map((row,ri)=>`<div><div class="lbl">${row}</div><div class="chips">${q.cols.map((c,ci)=>`<button class="chip" data-r="${ri}" data-c="${ci}" aria-pressed="${QA[qi][ri]===ci}">${c}</button>`).join('')}</div></div>`).join('')}</div>`;
+  else body=`<div class="ans">${q.o.map((o,oi)=>`<button data-c="${oi}" aria-pressed="${QA[qi]===oi}">${o}</button>`).join('')}</div>`;
+  qbox.innerHTML=`<div class="qt">${q.t}</div>${body}`;
+  document.getElementById('qprev').disabled=qi===0;
+  const nx=document.getElementById('qnext'); nx.disabled=!qDone(qi); nx.textContent=qi===Q.length-1?'Terminar':'Siguiente';
+  document.querySelector('.nav2').style.display='';
+}
+function renderResult(){
+  const vals=Q.map((q,i)=>q.noscore?null:Array.isArray(QA[i])?QA[i].reduce((s,x)=>s+x+1,0)/QA[i].length:QA[i]+1).filter(v=>v!==null);
+  const sc=vals.reduce((a,b)=>a+b,0)/vals.length;
+  document.getElementById('qn').textContent='¡Terminaste!';
+  document.getElementById('qprog').style.width='100%';
+  const nivel=sc<2?'bajo':sc<3?'moderado':sc<4?'bueno':'muy alto';
+  qbox.innerHTML=`<div class="qt">Tu nivel de actividad: ${sc.toFixed(1).replace('.',',')} de 5</div>
+    <div class="bar qbar" style="height:14px"><i style="width:${(sc-1)/4*100}%"></i></div>
+    <p style="margin:12px 0 0;font-size:14px">Tu nivel es <b>${nivel}</b>. No es una nota ni se compara con nadie: al terminar el piloto respondes otra vez y miramos cuánto avanzaste tú.</p>
+    <p class="sub" style="margin:8px 0 0">El profe ve tus respuestas solo para el estudio del piloto, con la autorización de tu acudiente.</p>
+    <button class="primary" id="backHab">Volver a mis hábitos</button>`;
+  document.getElementById('backHab').addEventListener('click',()=>showView('habitos'));
+  document.querySelector('.nav2').style.display='none';
+  document.querySelector('.survey').style.display='none';
+}
+qbox.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.r!==undefined) QA[qi][+b.dataset.r]=+b.dataset.c; else QA[qi]=+b.dataset.c;
+  renderQ();
+});
+document.getElementById('qprev').addEventListener('click',()=>{if(qi>0){qi--;renderQ();window.scrollTo(0,0)}});
+document.getElementById('qnext').addEventListener('click',()=>{if(qDone(qi)){qi++;renderQ();window.scrollTo(0,0)}});
+document.getElementById('openSurvey').addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x.dataset.v==='habitos'));
+  showView('encuesta'); renderQ();
+});
+
+/* ---------- Bienestar ----------
+   El ánimo se queda solo en este celular: no se envía a ningún panel. */
+const MOODMSG={
+  4:'¡Qué bien! Aprovecha esa energía: muévete y comparte tu buen ánimo.',
+  3:'Bien. Un poco de movimiento y agua te ayudan a mantenerlo.',
+  2:'Un día normal también está bien. Si quieres, prueba la respiración en cuadro.',
+  1:'Lamentamos que no estés bien. Prueba una herramienta de 2 minutos y cuéntale a alguien de confianza cómo te sientes.',
+  0:'Gracias por decirlo. No tienes que pasarlo solo: habla hoy con orientación escolar, un adulto de confianza o llama gratis a la línea 192, opción 4. Abajo están los contactos.'
+};
+document.getElementById('moods').addEventListener('click',e=>{
+  const b=e.target.closest('.mood'); if(!b) return;
+  document.querySelectorAll('.mood').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  const m=document.getElementById('moodMsg'); m.hidden=false; m.textContent=MOODMSG[b.dataset.m];
+});
+let bt=null;
+document.getElementById('breathBtn').addEventListener('click',()=>{
+  const box=document.getElementById('breath'), c=document.getElementById('circle'), btn=document.getElementById('breathBtn');
+  if(bt){clearInterval(bt);bt=null;box.hidden=true;btn.textContent='Empezar';c.classList.remove('in');return}
+  box.hidden=false; btn.textContent='Parar';
+  const steps=[['Inhala',true],['Sostén',true],['Exhala',false],['Sostén',false]]; let k=0, n=0;
+  const tick=()=>{const st=steps[k%4]; c.textContent=st[0]; c.classList.toggle('in',st[1]); k++; if(k>16){clearInterval(bt);bt=null;c.textContent='¡Bien hecho!';btn.textContent='Otra vez';c.classList.remove('in')}};
+  tick(); bt=setInterval(tick,4000);
+});
+
+/* ---------- Aprende ---------- */
+const TIPS=[
+  'Con calor, muévete temprano o al caer la tarde, con ropa clara y agua a la mano.',
+  'Caminar al colegio, subir escaleras y bailar champeta también cuentan como movimiento.',
+  'Levántate a la misma hora todos los días: es el mejor truco para dormir mejor.',
+  'Mejor la fruta entera que el jugo con azúcar: la fibra te llena más y cuida tus dientes.',
+  'Una gaseosa de 400 ml trae cerca de 10 cucharaditas de azúcar. Cámbiala por agua o fruta.',
+  'Hacer fuerza con tu propio peso es seguro para adolescentes si cuidas la técnica.',
+  'Si tu orina sale oscura, te falta agua. Lo ideal es que sea clarita.'
+];
+let tipI=0;
+const tipEl=document.getElementById('tipTxt');
+const showTip=()=>{tipEl.textContent=TIPS[tipI%TIPS.length]};
+document.getElementById('tipNext').addEventListener('click',()=>{tipI++;showTip()});
+showTip();
+const readb=document.getElementById('readb');
+const setRead=v=>{readb.setAttribute('aria-pressed',v);readb.textContent=v?'Leída ✓':'Ya la leí';const l=document.getElementById('libSueno');l.textContent=v?'Leída':'Nueva';l.className='st'+(v?'':' nueva')};
+setRead(S('bhpro-leida',false));
+readb.addEventListener('click',()=>{const v=readb.getAttribute('aria-pressed')!=='true';W('bhpro-leida',v);setRead(v);if(v) unlock('lector')});
+document.querySelectorAll('.quiz .opts button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.quiz .opts button').forEach(x=>x.className=x.dataset.a==='f'?'right':(x===b?'wrong':''));
+  document.getElementById('quizAns').hidden=false;
+  if(b.dataset.a==='f') unlock('sabe');
+}));
+const deck=document.getElementById('deck'), nS=deck.children.length, dd=document.getElementById('ddots');
+dd.innerHTML='<i></i>'.repeat(nS);
+let dI=0;
+function deckUI(){
+  dI=Math.round(deck.scrollLeft/(deck.clientWidth+10));
+  [...dd.children].forEach((x,k)=>x.className=k===dI?'on':'');
+  document.getElementById('dprev').disabled=dI===0; document.getElementById('dnext').disabled=dI>=nS-1;
+}
+const goSlide=k=>deck.scrollTo({left:k*(deck.clientWidth+10)});
+deck.addEventListener('scroll',()=>requestAnimationFrame(deckUI),{passive:true});
+document.getElementById('dprev').addEventListener('click',()=>goSlide(Math.max(0,dI-1)));
+document.getElementById('dnext').addEventListener('click',()=>goSlide(Math.min(nS-1,dI+1)));
+deckUI();
+document.getElementById('goAprende').addEventListener('click',e=>{e.preventDefault();document.querySelector('.tab[data-v="aprende"]').click()});
+
+/* ---------- Profe ---------- */
+const HB=[['Movimiento',74],['Agua',58],['Frutas y verduras',52],['Reto de fuerza',46],['Sueño 8–10 h',41],['Celular lejos',33]];
+document.getElementById('hb').innerHTML = HB.map(h=>`
+  <div class="hbar"><span>${h[0]}</span><div class="bar"><i class="${h[1]<45?'low':''}" style="width:${h[1]}%"></i></div><b style="text-align:right">${h[1]}%</b></div>`).join('')
+  + '<p class="sub" style="margin:10px 0 0">Porcentaje de registros con la meta completa. Los hábitos en rojo están por debajo de 45% y son buen tema para el próximo reto o charla.</p>';
+
+/* ---------- Revisar ---------- */
+const F=[
+  ['insignias','Insignias y logros','11 insignias en la pantalla de Hábitos (agua, movimiento, sueño, racha, fuerza, lectura y más). Al ganar una sale un aviso con confeti. Las bloqueadas dicen cómo se ganan.',1],
+  ['tarjetas','Cápsula en tarjetas deslizables','La cápsula de la semana se lee en 6 tarjetas cortas con emojis, deslizando con el dedo, en vez de un bloque de texto.',1],
+  ['celebra','Celebración al cumplir un hábito','Confeti y un icono que rebota cuando se cumple una meta. Al guardar un día que suma a la racha, la llama 🔥 crece y salta confeti.',0],
+  ['progreso','Barras y anillo de progreso animados','Anillo de puntos del día que se llena, barrita de avance en cada hábito y barras animadas en Mi curso y en el panel del profe.',0],
+  ['nombre','Nombre de la app "BH Pro"','Cambió en esta versión, como lo pidió el profe.',0],
+  ['habitos','Los 5 hábitos diarios y sus metas OMS','Movimiento, agua, sueño de 8 a 10 h, frutas y verduras (3 porciones), celular lejos 30 min antes de dormir.',0],
+  ['medios','Medio camino solo en 3 hábitos','5 puntos a mitad de meta solo en movimiento, agua y sueño. Frutas y celular son todo o nada.',0],
+  ['racha','Racha con 3 de 5 hábitos','El día suma a la racha si se registra y se cumplen al menos 3 hábitos. Si no, se guarda igual.',0],
+  ['micurso','"Mi curso" en vez de liga','Sin ranking entre cursos ni compañeros. Meta cooperativa del curso y comparación con la semana pasada.',0],
+  ['premios','Reconocimiento por meta del curso','Todo curso que llegue a la meta elige la actividad de una clase y se reconoce en izada de bandera.',0],
+  ['habmes','Hábito del mes en el curso','El hábito más bajo del curso se vuelve el tema del mes (Dato del profe y reto en clase).',0],
+  ['privado','Mis datos solo los veo yo y el profe','Los compañeros no ven los registros de nadie. Busca que registren con honestidad.',0],
+  ['registro','Registro con opciones rápidas y día de ayer','Botones de minutos y horas. Se puede completar solo el día anterior.',0],
+  ['reto','Reto semanal de fuerza (bono)','10 min de fuerza, 3 días por semana. +10 puntos.',0],
+  ['porque','Botón "¿Por qué?" con la fuente','Explica cada hábito y cita la fuente.',0],
+  ['nopide','Lo que la app no pide','Sin peso, IMC, calorías, fotos ni ubicación en el registro diario. Talla y peso irían en la ficha de pruebas de la fase 2.',0],
+  ['aprende','Pestaña "Aprende"','Tip diario, cápsula semanal de 3 minutos con fuentes, pregunta rápida y biblioteca de cápsulas. El panel del profe muestra cuántos leyeron.',0],
+  ['paqa','Encuesta PAQ-A en la app (muestra)','Encuesta de inicio y de cierre del piloto, una pregunta por pantalla, con resultado de 1 a 5 y resumen por curso en el panel del profe.',0],
+  ['bienestar','Pestaña "Bienestar" (salud mental)','¿Cómo te sientes? privado, herramientas de 2 minutos (respiración, moverse, hablar) y rutas de ayuda del colegio y líneas gratuitas. Sin diagnósticos ni datos al profe.',0],
+  ['revisar','"Revisar" pasa a un enlace arriba','Para dejar espacio a Bienestar. En la app real esta pestaña no existe.',0],
+  ['tips','Dato del profe','Mensaje corto de salud que cambia cada día.',0],
+  ['panel','Panel del profe y alertas','Participación, cumplimiento por hábito y estudiantes que requieren atención.',0],
+  ['diseno','Colores y diseño general','Verde mar y amarillo mango, letras grandes, pensada para celular.',0]
+];
+let R = S('bhpro-rev-v8',{});
+const fEl=document.getElementById('feats');
+const lab={si:'Aprobado',ajustar:'Ajustar',no:'No va'};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function renderF(){
+  fEl.innerHTML = F.map(f=>{const r=R[f[0]]||{};return `
+    <div class="card feat"><h3>${f[1]}${f[3]?'<span class="new">Nuevo</span>':''}</h3><p>${f[2]}</p>
+    <div class="votes">${['si','ajustar','no'].map(v=>`<button class="vote ${r.v===v?'sel':''}" data-f="${f[0]}" data-v="${v}" aria-pressed="${r.v===v}">${lab[v]}</button>`).join('')}</div>
+    <textarea data-f="${f[0]}" placeholder="Comentario (opcional)">${esc(r.n||'')}</textarea></div>`}).join('');
+  tally();
+}
+function tally(){
+  const c={si:0,ajustar:0,no:0}; F.forEach(f=>{const v=(R[f[0]]||{}).v; if(v) c[v]++});
+  const pend=F.length-c.si-c.ajustar-c.no;
+  document.getElementById('tally').innerHTML=`<span style="color:var(--ok)">${c.si} aprobadas</span><span style="color:var(--warn)">${c.ajustar} por ajustar</span><span style="color:var(--no)">${c.no} descartadas</span><span>${pend} pendientes</span>`;
+  document.getElementById('resumen').value = 'Revisión del prototipo BH Pro v8\n' + F.map(f=>{const r=R[f[0]]||{};return `- ${f[1]}: ${r.v?lab[r.v]:'Sin revisar'}${r.n?' · '+r.n:''}`}).join('\n');
+}
+fEl.addEventListener('click',e=>{
+  const b=e.target.closest('.vote'); if(!b) return;
+  R[b.dataset.f]=Object.assign({},R[b.dataset.f],{v:b.dataset.v}); W('bhpro-rev-v8',R);
+  b.parentElement.querySelectorAll('.vote').forEach(x=>{x.classList.toggle('sel',x===b);x.setAttribute('aria-pressed',x===b)});
+  tally();
+});
+fEl.addEventListener('input',e=>{
+  if(e.target.tagName!=='TEXTAREA') return;
+  R[e.target.dataset.f]=Object.assign({},R[e.target.dataset.f],{n:e.target.value}); W('bhpro-rev-v8',R); tally();
+});
+document.getElementById('copy').addEventListener('click',()=>{
+  const t=document.getElementById('resumen'), m=document.getElementById('copied');
+  navigator.clipboard.writeText(t.value).then(()=>{m.textContent='Resumen copiado. Péguelo en el chat.'})
+  .catch(()=>{t.focus();t.select();m.textContent='Texto seleccionado: manténgalo presionado y elija Copiar.'});
+});
+renderF();
+/* Permite instalarla en el celular y abrirla sin internet */
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body></html>
