@@ -29,6 +29,14 @@
   --ok:#4fc27f; --warn:#e9a53a; --no:#ef6b5c; color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+/* Escudo del colegio desenfocado de fondo; las tarjetas son semitransparentes para que se note */
+:root{--surface:rgba(255,255,255,.72);--line:rgba(160,190,182,.55)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--surface:rgba(20,35,31,.78);--line:rgba(60,90,80,.6)}}
+:root[data-theme="dark"]{--surface:rgba(20,35,31,.78);--line:rgba(60,90,80,.6)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:url(escudo.png) center 40%/105% auto no-repeat;filter:blur(6px);opacity:.6;transform:scale(1.05);pointer-events:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body::before{opacity:.3}}
+:root[data-theme="dark"] body::before{opacity:.3}
+nav.tabs{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .wrap{max-width:480px;margin:0 auto;padding-inline:16px;padding-block:12px 96px}
 .proto{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:center;padding-block:4px 10px}
 .proto b{color:var(--mango)}
